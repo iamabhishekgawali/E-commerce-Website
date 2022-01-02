@@ -2,19 +2,25 @@
 const Product = require("../model/productModel")
 const ErrorHandler = require("../utils/errorhandler")
 const catchasyncerros = require('../middleware/catchAsyncErrors')
+const ApiFeatures = require("../utils/apifeatures")
+const catchAsyncErrors = require("../middleware/catchAsyncErrors")
 
 // Create Product
 exports.createProduct = catchasyncerros( async (req, res, next) => {
-    const product = await Product.create(req.body)
+
+    req.body.user = req.user.id
+    const product = await Product .create(req.body)
     res.status(201).json({ success: true, product })
 })
-
 
 // Get All products
 exports.getAllProducts = catchasyncerros(async (req, res) => {
 
-    const products = await Product.find()
-    res.status(200).json({ success: true, products })
+    const resultperPage = 5;
+    const productCount = await Product.countDocuments()
+    const apifeatures = new ApiFeatures(Product.find(),req.query).search().filter().pagination(resultperPage);
+    const products = await apifeatures.query;
+    res.status(200).json({ success: true, products,productCount })
 })
 
 // Update Product
@@ -57,7 +63,6 @@ exports.deleteProduct = catchasyncerros( async (req, res, next) => {
 
 
 // Get Product Details
-
 exports.getProductDetails = catchasyncerros( async (req, res, next) => {
     const product = await Product.findById(req.params.id);
 
@@ -71,3 +76,16 @@ exports.getProductDetails = catchasyncerros( async (req, res, next) => {
     });
 })
 
+// Logout User
+exports.logout = catchAsyncErrors(async(req,res,next)=>{
+
+    req.cookie("token",null,{
+        expires : new Date(Date.now()),
+        httpOnly : true,
+    })
+
+    res.status(200).json({
+        success : true,
+        message : "Logged Out"
+    });
+});

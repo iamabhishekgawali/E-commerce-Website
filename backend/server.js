@@ -1,13 +1,8 @@
 
 
-
 const app = require('./app')
 const dotenv = require("dotenv")
 const connectDatabase = require("./config/database")
-
-
-// Handling Uncaugth error
-
 
 
 // Config
@@ -26,7 +21,7 @@ process.on('uncaughtException',(err)=>{
     })
 })
 
-// UnHandled Promise Rejection
+// Handling UnHandled Promise Rejection
 process.on('unhandledRejection',(err)=>{
     console.log(`Error : ${err.message}`)
     console.log("Server is terminating  ... ")
