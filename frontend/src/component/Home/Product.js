@@ -3,6 +3,8 @@ import { Link } from "react-router-dom";
 import ReactStars from 'react-rating-stars-component'
 
 
+// "https://i.ibb.co/DRST11n/1.webp"
+
 // to={product._id}
 const Product = ({product}) => {
 
@@ -11,19 +13,16 @@ const Product = ({product}) => {
         color : "rgba(20,20,20,0.1)",
         activeColor : "tomato",
         size : window.innerWidth < 600 ? 20 : 25,
-        value : 2.5,
+        value : product.ratings,
         inHalf : true 
     }
-    console.log(product)
 
-    console.log(product.name)
-    console.log(product.images[0].url)
     return (
-        <Link className='productCard' to={product._id}  >
+        <Link className='productCard' to={`/product/${product._id}`}  >
                 <img src = {product.images[0].url}  alt = {product.name}/>
                 <p>{product.name}</p>
                 <div>
-                    <ReactStars {...options} /><span>(256 Reviews)</span>
+                    <ReactStars {...options} /><span>{product.numOfReviews}</span>
                 </div>
                 <span>{product.price}</span>
         </Link>   

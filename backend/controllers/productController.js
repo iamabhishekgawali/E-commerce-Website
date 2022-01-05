@@ -13,14 +13,14 @@ exports.createProduct = catchasyncerros(async (req, res, next) => {
 
 // Get All products
 exports.getAllProducts = catchasyncerros(async (req, res) => {
-  const resultperPage = 5;
-  const productCount = await Product.countDocuments();
+  const resultperPage = 10;
+  const productsCount = await Product.countDocuments();
   const apifeatures = new ApiFeatures(Product.find(), req.query)
     .search()
     .filter()
     .pagination(resultperPage);
   const products = await apifeatures.query;
-  res.status(200).json({ success: true, products, productCount });
+  res.status(200).json({ success: true, products, productsCount });
 });
 
 // Update Product
@@ -91,6 +91,8 @@ exports.createProductReview = catchasyncerros(async (req, res, next) => {
   };
 
   const product = await Product.findById(productId);
+
+  console.log(product);
 
   const isReviewed = product.reviews.find(
     (rev) => rev.user.toString() === req.user._id.toString()
